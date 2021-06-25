@@ -109,9 +109,8 @@ int linear_search(struct array* arr,int key)
     }
     return -1;
 }
-int binary_search(struct array* arr,int key) // O(log2(n))
+int binary_search(struct array* arr,int key,int start,int end) // O(log2(n))
 {
-    int start = 0,end = arr->len-1;
     while(start<=end)
     {
         int mid = (start+end)/2;
@@ -135,9 +134,8 @@ int jump_search(struct array* arr,int key)
     }
     return -1;
 }
-int interpolation_search(struct array* arr,int key)
+int interpolation_search(struct array* arr,int key,int start,int end)
 {
-    int start = 0,end = arr->len-1;
     while(start<=end && key>=arr->A[start] && key<=arr->A[end])
     {
         int pos = start + (key - arr->A[start])*(end-start)/(arr->A[end]-arr->A[start]);
@@ -147,26 +145,100 @@ int interpolation_search(struct array* arr,int key)
     }
     return -1;
 }
+int exponential_search(struct array* arr,int key)
+{
+    int i = 1;
+    while(i<arr->len && arr->A[i]<=key)
+    {
+        i=i*2;
+    }
+    int start = i/2;
+    int end = i>=arr->len?arr->len-1:i;
+    return binary_search(arr,key,start,end);
+}
+int ternary_search(struct array* arr,int key,int start,int end)
+{
+    while(start<=end)
+    {
+        int mid1 = start + (end-start)/3;
+        int mid2 = end - (end-start)/3;
+
+        if(arr->A[mid1]==key) return mid1;
+        if(arr->A[mid2]==key) return mid2;
+
+        if(key<arr->A[mid1]) end = mid1-1;
+        else if(key>arr->A[mid2]) start = mid2+1;
+        else
+        {
+            start = mid1+1;
+            end = mid2-1;
+        }
+    }
+    return -1;
+}
+void swap(int *a,int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+void bubble_sort(struct array* arr)
+{
+    int swapped = 1;
+    while(swapped==1)
+    {
+        swapped = 0;
+        int i=0;
+        while(i<arr->len-1)
+        {
+            if(arr->A[i]>arr->A[i+1])
+            {
+                swap(&arr->A[i],&arr->A[i+1]);
+                swapped = 1;
+            }
+            i++;
+        }
+    }
+}
+void insertion_sort(struct array* arr)
+{
+    for(int i=1;i<arr->len;i++)
+    {
+        int key = arr->A[i],j=i-1;
+        while(j>=0 && arr->A[j]>key)
+        {
+            arr->A[j+1] = arr->A[j];
+            j--;
+        }
+        arr->A[j+1] = key;
+    }
+}
+void selection_sort(struct array* arr)
+{
+    for(int i=0;i<arr->len-1;i++)
+    {
+        int min_ind = i;
+        for(int j=i+1;j<arr->len;j++)
+        {
+            if(arr->A[j]<arr->A[min_ind])
+            {
+                min_ind = j;
+            }
+        }
+        swap(&arr->A[i],&arr->A[min_ind]);
+    }
+}
 int main()
 {
     int n;
     scanf("%d",&n);
     struct array* arr = createArray(n);
+    append(arr,40);
+    append(arr,30);
+    append(arr,15);
+    append(arr,45);
     append(arr,10);
     append(arr,20);
-    append(arr,30);
-    append(arr,40);
-    append(arr,50);
-    append(arr,60);
-    append(arr,70);
-    int ind = interpolation_search(arr,50);
-    if(ind==-1)
-    {
-        printf("The element is not found\n");
-    }
-    else
-    {
-        printf("The element is found at index %d\n",ind);
-    }
+    selection_sort(arr);
     traverse(arr);
 }
