@@ -1,6 +1,3 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
 struct array
 {
     int *A; // Array in Heap
@@ -374,33 +371,4 @@ struct array* merge(struct array* arr1,struct array* arr2)
         j++;
     }
     return arr3;
-}
-int main()
-{
-    int n;
-    scanf("%d",&n);
-    struct array* arr = createArray(n);
-    append(arr,10);
-    append(arr,30);
-    append(arr,50);
-    append(arr,70);
-    append(arr,90);
-    append(arr,110);
-    append(arr,130);
-    append(arr,150);
-    append(arr,170);
-
-    struct array* arr1 = createArray(n);
-    
-    append(arr1,20);
-    append(arr1,40);
-    append(arr1,60);
-    append(arr1,80);
-    append(arr1,100);
-    append(arr1,120);
-    append(arr1,140);
-    append(arr1,160);
-    append(arr1,180);
-    struct array* arr3 = merge(arr,arr1);
-    traverse(arr3);
 }
